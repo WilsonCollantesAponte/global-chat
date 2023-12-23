@@ -8,11 +8,6 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
 
-  // socket.on("hello", (arg) => {
-  //   console.log(arg);
-  //   setMessages([...messages, arg]);
-  // });
-
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -29,6 +24,7 @@ export default function Home() {
     socket.on("message", recivedMessage);
 
     return () => {
+      // socket.off("message", recivedMessage);
       socket.off("message", recivedMessage);
     };
   }, []);
