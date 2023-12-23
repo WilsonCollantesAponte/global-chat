@@ -25,7 +25,7 @@ export default function Home() {
 
     return () => {
       // socket.off("message", recivedMessage);
-      socket.off("message", recivedMessage);
+      socket.off("message");
     };
   }, []);
 
