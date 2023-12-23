@@ -18,7 +18,7 @@ export default function Home() {
 
     const newMessage = {
       body: message,
-      from: "me",
+      from: "Me",
     };
 
     setMessages([...messages, newMessage]);
