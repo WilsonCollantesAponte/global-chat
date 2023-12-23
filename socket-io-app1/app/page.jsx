@@ -15,42 +15,46 @@ export default function Home() {
 
   function handleSubmit(event) {
     event.preventDefault();
-    setMessages([...messages, message]);
+
+    const newMessage = {
+      body: message,
+      from: "me",
+    };
+
+    setMessages([...messages, newMessage]);
     socket.emit("message", message);
   }
 
   useEffect(() => {
-    socket.on("hello", (arg) => {
-      console.log(arg);
-      setMessages([...messages, arg]);
-    });
-    socket.emit("howdy", "stranger");
-  }, [messages.length]);
+    socket.on("message", recivedMessage);
+
+    return () => {
+      socket.off("message", recivedMessage);
+    };
+  }, []);
+
+  function recivedMessage(message) {
+    setMessages((state) => [...state, message]);
+  }
 
   return (
-    // <div className=" bg-red-400">
-    //   <div>Interface</div>
-    //   <div>
-    //     {messages.map((val) => (
-    //       <div>{val}</div>
-    //     ))}
-    //   </div>
-    //   <input
-    //     className=" text-black"
-    //     type="text"
-    //     value={toSend}
-    //     onChange={(event) => {
-    //       setToSend(event.target.value);
-    //     }}
-    //   />
-    //   <button
-    //     onClick={() => {
-    //       socket.emit("helloe", "client");
-    //     }}
-    //   >
-    //     Send
-    //   </button>
-    // </div>
-    <div></div>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="To send here..."
+          onChange={(event) => setMessage(event.target.value)}
+        />
+        <button>Send</button>
+      </form>
+
+      <ul>
+        {messages.map((message, index) => (
+          <li key={index}>
+            {message.from}:{message.body}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
