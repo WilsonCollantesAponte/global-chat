@@ -31,11 +31,19 @@ app.post("/one", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  socket.emit("hello", "word");
+  // socket.emit("hello", "word");
+
+  console.log(socket.id);
+  socket.on("message", (body) => {
+    socket.broadcast.emit("message", {
+      body,
+      from: socket.id.slice(6),
+    });
+  });
 });
 
-io.on("hello", (socket) => {
-  io.emit("helloe", "server - " + socket);
-});
+// io.on("hello", (socket) => {
+//   io.emit("helloe", "server - " + socket);
+// });
 
 module.exports = server;
