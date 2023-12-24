@@ -38,9 +38,9 @@ export default function Home() {
   return (
     <div className="bg-zinc-700 flex flex-col h-screen h-fullX py-1.5 px-2.5">
       {/* <div className=""> */}
-      <ul className=" text-white overflow-auto">
+      <div className=" text-white overflow-auto">
         {messages.map((message, index) => (
-          <li
+          <div
             className={` w-2/3 rounded-xl mt-1.5
           ${message.from === "Me" ? " bg-blue-600 ml-auto" : "bg-black/70"}
           `}
@@ -50,9 +50,9 @@ export default function Home() {
               <span className=" font-extrabold italic">{message.from}</span>
               <span className=" ml-auto text-sm">{message.body}</span>
             </span>
-          </li>
+          </div>
         ))}
-      </ul>
+      </div>
 
       <div className="flex-grow flex mt-3">
         <form className=" w-full flex self-end" onSubmit={handleSubmit}>
