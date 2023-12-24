@@ -36,7 +36,7 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-zinc-700 flex flex-col h-screen h-fullX py-1.5 px-2.5">
+    <div className="bg-zinc-700 flex flex-col h-screen h-fullX py-1.5 px-2.5 snap-end">
       {/* <div className=""> */}
       <div className=" text-white overflow-auto">
         {messages.map((message, index) => (
