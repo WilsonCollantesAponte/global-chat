@@ -16,24 +16,8 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res
-    .status(200)
-    .send(
-      "Servidor de la app-1 integración socket.io - iniciada - establecida:true"
-    );
-});
-
-app.post("/one", (req, res) => {
-  const { id } = req.body;
-
-  res.status(200).json({ es: id });
-});
-
 io.on("connection", (socket) => {
-  // socket.emit("hello", "word");
-
-  console.log(socket.id);
+  // console.log(socket.id);
   socket.on("message", (body) => {
     socket.broadcast.emit("message", {
       body,
@@ -41,9 +25,5 @@ io.on("connection", (socket) => {
     });
   });
 });
-
-// io.on("hello", (socket) => {
-//   io.emit("helloe", "server - " + socket);
-// });
 
 module.exports = server;

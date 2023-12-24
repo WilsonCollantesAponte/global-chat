@@ -24,8 +24,7 @@ export default function Home() {
     socket.on("message", recivedMessage);
 
     return () => {
-      // socket.off("message", recivedMessage);
-      socket.off("message");
+      socket.off("message", recivedMessage);
     };
   }, []);
 
@@ -37,6 +36,7 @@ export default function Home() {
     <div>
       <form onSubmit={handleSubmit}>
         <input
+          className="text-black"
           type="text"
           placeholder="To send here..."
           onChange={(event) => setMessage(event.target.value)}
