@@ -33,33 +33,37 @@ export default function Home() {
   }
 
   return (
-    <div className="bg-zinc-700 h-full py-1.5 px-2.5">
-      <div className="">
-        <ul className=" text-white">
-          {messages.map((message, index) => (
-            <li
-              className={` w-2/3 rounded-xl mt-1.5
+    <div className="bg-zinc-700 flex flex-col h-screen h-fullX py-1.5 px-2.5">
+      {/* <div className=""> */}
+      <ul className=" text-white overflow-auto">
+        {messages.map((message, index) => (
+          <li
+            className={` w-2/3 rounded-xl mt-1.5
           ${message.from === "Me" ? " bg-blue-600 ml-auto" : "bg-black/70"}
           `}
-              key={index}
-            >
-              <span className="py-1 px-2 relative break-all flex flex-col">
-                <span className=" font-extrabold italic">{message.from}</span>
-                <span className=" ml-auto text-sm">{message.body}</span>
-              </span>
-            </li>
-          ))}
-        </ul>
-        <form className=" w-full flex mt-6" onSubmit={handleSubmit}>
+            key={index}
+          >
+            <span className="py-1 px-2 relative break-all flex flex-col">
+              <span className=" font-extrabold italic">{message.from}</span>
+              <span className=" ml-auto text-sm">{message.body}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="flex-grow flex mt-3">
+        <form className=" w-full flex self-end" onSubmit={handleSubmit}>
           <input
-            className=" w-full rounded-md"
+            className="rounded-md w-full"
             type="text"
             placeholder="To send here..."
             onChange={(event) => setMessage(event.target.value)}
           />
           <button className=" text-white px-1.5">Send</button>
+          <img className=" h-12" src="/MatiMati_crop.jpg" alt="" />
         </form>
       </div>
+      {/* </div> */}
     </div>
   );
 }
