@@ -2,7 +2,8 @@
 import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 
-const socket = io("http://localhost:3001/");
+// const socket = io("http://localhost:3001/");
+const socket = io("https://global-chat-uxv7.onrender.com/");
 
 export default function Home() {
   const [message, setMessage] = useState("");
@@ -15,6 +16,8 @@ export default function Home() {
       body: message,
       from: "Me",
     };
+
+    setMessage("");
 
     setMessages([...messages, newMessage]);
     socket.emit("message", message);
@@ -54,6 +57,7 @@ export default function Home() {
       <div className="flex-grow flex mt-3">
         <form className=" w-full flex self-end" onSubmit={handleSubmit}>
           <input
+            value={message}
             className="rounded-md w-full"
             type="text"
             placeholder="To send here..."
