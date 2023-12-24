@@ -69,7 +69,7 @@ export default function Home() {
 
       <div className=" mt-2 flex flex-col justify-center items-center gap-7">
         <div className=" text-4xl text-white italic">Wilson's global chat</div>
-        <img className=" w-1/3 rounded-full" src="/MatiMati_crop.jpg" alt="" />
+        {/* <img className=" w-1/3 rounded-full" src="/MatiMati_crop.jpg" alt="" /> */}
       </div>
     </div>
   );
