@@ -33,24 +33,33 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          className="text-black"
-          type="text"
-          placeholder="To send here..."
-          onChange={(event) => setMessage(event.target.value)}
-        />
-        <button>Send</button>
-      </form>
-
-      <ul>
-        {messages.map((message, index) => (
-          <li key={index}>
-            {message.from}:{message.body}
-          </li>
-        ))}
-      </ul>
+    <div className="bg-zinc-700 h-full py-1.5 px-2.5">
+      <div className="">
+        <ul className=" text-white">
+          {messages.map((message, index) => (
+            <li
+              className={` w-2/3 rounded-xl mt-1.5
+          ${message.from === "Me" ? " bg-blue-600 ml-auto" : "bg-black/70"}
+          `}
+              key={index}
+            >
+              <span className="py-1 px-2 relative break-all flex flex-col">
+                <span className=" font-extrabold italic">{message.from}</span>
+                <span className=" ml-auto text-sm">{message.body}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+        <form className=" w-full flex mt-6" onSubmit={handleSubmit}>
+          <input
+            className=" w-full rounded-md"
+            type="text"
+            placeholder="To send here..."
+            onChange={(event) => setMessage(event.target.value)}
+          />
+          <button className=" text-white px-1.5">Send</button>
+        </form>
+      </div>
     </div>
   );
 }
