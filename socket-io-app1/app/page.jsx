@@ -37,7 +37,6 @@ export default function Home() {
 
   return (
     <div className="bg-zinc-700 flex flex-col h-screen py-1.5 px-2.5">
-      {/* <div className=""> */}
       <div className=" text-white overflow-auto">
         {messages.map((message, index) => (
           <div
@@ -67,7 +66,6 @@ export default function Home() {
           <img className=" h-12" src="/MatiMati_crop.jpg" alt="" />
         </form>
       </div>
-      {/* </div> */}
     </div>
   );
 }
