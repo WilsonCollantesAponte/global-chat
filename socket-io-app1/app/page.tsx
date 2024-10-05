@@ -5,11 +5,32 @@ import { useEffect, useState } from "react";
 // const socket = io("http://localhost:3001/");
 const socket = io("https://global-chat-uxv7.onrender.com/");
 
+type Message<T extends "text" | "image"> = {
+  from: string;
+  type: T;
+} & (T extends "text"
+  ? {
+      text: {
+        message: string;
+      };
+    }
+  : {
+      image: {
+        uri: string;
+        message?: string;
+      };
+    });
+
 export default function Home() {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [isLoadingImages, setIsLoadingImages] = useState<boolean>(false);
+  const [currentImages, setCurrentImages] = useState<Array<string>>([]);
+  const [refresh, setRefresh] = useState<number>(0);
 
   function handleSubmit(event) {
+    console.log(currentImages);
+
     event.preventDefault();
 
     const newMessage = {
@@ -55,6 +76,23 @@ export default function Home() {
       </div>
 
       <div className="flex-grow flex mt-3">
+        {isLoadingImages ? (
+          <div className="flex items-center justify-center">
+            {/* <Spinner size="lg" /> */}
+            Cargando...
+          </div>
+        ) : (
+          <div className="flex gap-3 overflow-auto mt-1.5 px-4">
+            {currentImages.map((aImage, index) => (
+              <img
+                className="size-36 object-cover rounded-md my-1.5"
+                key={index}
+                src={aImage}
+                alt="..."
+              />
+            ))}
+          </div>
+        )}
         <form className=" w-full flex self-end" onSubmit={handleSubmit}>
           <input
             value={message}
@@ -62,6 +100,32 @@ export default function Home() {
             type="text"
             placeholder="To send here..."
             onChange={(event) => setMessage(event.target.value)}
+          />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={(event) => {
+              setIsLoadingImages(true);
+
+              const { files } = event.target;
+
+              if (!files?.length) return setIsLoadingImages(false);
+
+              for (const iterator of Array.from(files)) {
+                const readImage = new FileReader();
+                readImage.readAsDataURL(iterator);
+                readImage.onload = (event) => {
+                  currentImages.push(String(event.target?.result));
+                  setCurrentImages(currentImages);
+                };
+              }
+              setRefresh(refresh + 1);
+              setTimeout(() => {
+                setRefresh(refresh + 1.81);
+                setIsLoadingImages(false);
+              }, 891);
+            }}
           />
           <button className=" text-white px-1.5">Send</button>
           <img className=" h-12" src="/MatiMati_crop.jpg" alt="" />
