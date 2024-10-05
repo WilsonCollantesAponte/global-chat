@@ -15,6 +15,7 @@ export default function Home() {
     const newMessage = {
       body: message,
       from: "Me",
+      type: "text",
     };
 
     setMessage("");
@@ -37,7 +38,7 @@ export default function Home() {
 
   return (
     <div className="bg-zinc-700 flex flex-col h-screen py-1.5 px-2.5">
-      <div className=" text-white overflow-auto">
+      <div className="text-white overflow-auto">
         {messages.map((message, index) => (
           <div
             className={` w-2/3 rounded-xl mt-1.5
