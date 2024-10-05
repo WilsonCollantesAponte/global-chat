@@ -137,6 +137,13 @@ export default function Component() {
                   {message.image?.message && (
                     <p className="text-sm">{message.image.message}</p>
                   )}
+                  <a
+                    href={message.image.uri}
+                    download={`${message.from}_${index + 1}`}
+                    className="text-blue-300 hover:text-blue-500"
+                  >
+                    Download Image
+                  </a>
                 </div>
               ) : (
                 <p className="break-words">{message.text.message}</p>
