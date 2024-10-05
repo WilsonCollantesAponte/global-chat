@@ -5,8 +5,8 @@ import { useEffect, useState, FormEvent, ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-const socket = io("http://localhost:3001/");
-// const socket = io("https://global-chat-uxv7.onrender.com/");
+// const socket = io("http://localhost:3001/");
+const socket = io("https://global-chat-uxv7.onrender.com/");
 
 type TextMessage = {
   from: string;
