@@ -153,7 +153,7 @@ export default function Component() {
                     download={`${message.from}_${index + 1}`}
                     className="text-blue-300 hover:text-blue-500"
                   >
-                    Download Image
+                    Descargar imagen
                   </a>
                 </div>
               ) : (
@@ -241,8 +241,15 @@ export default function Component() {
       </div>
 
       <div className="bg-zinc-900 py-4">
-        <h1 className="text-4xl text-white italic text-center">
-          Wilson's Global Chat
+        <h1 className="text-4xl text-white italic text-center flex justify-center items-center gap-3">
+          Chat Global de Wilson
+          <Image
+            src="/MatiMati_crop.jpg"
+            className="rounded-full"
+            width={60}
+            height={60}
+            alt="Matiasss"
+          />
         </h1>
       </div>
     </div>
