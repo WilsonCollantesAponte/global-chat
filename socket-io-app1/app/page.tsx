@@ -3,8 +3,8 @@ import { io } from "socket.io-client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-// const socket = io("http://localhost:3001/");
-const socket = io("https://global-chat-uxv7.onrender.com/");
+const socket = io("http://localhost:3001/");
+// const socket = io("https://global-chat-uxv7.onrender.com/");
 
 type Message<T extends "text" | "image"> = {
   from: string;
@@ -29,8 +29,6 @@ export default function Home() {
   const [isLoadingImages, setIsLoadingImages] = useState<boolean>(false);
 
   function handleSubmit(event) {
-    console.log(currentImages);
-
     event.preventDefault();
 
     if (currentImages.length) {
@@ -44,8 +42,8 @@ export default function Home() {
       };
 
       setMessages([...messages, newMessage]);
-      socket.emit("message", newMessage);
-    } else {
+      socket.emit("message", newMessage); // Emitir el mensaje
+    } else if (message.trim()) {
       const newMessage: Message<"text"> = {
         from: "Me",
         type: "text",
@@ -55,10 +53,11 @@ export default function Home() {
       };
 
       setMessages([...messages, newMessage]);
-      socket.emit("message", newMessage);
+      socket.emit("message", newMessage); // Emitir el mensaje
     }
 
     setMessage("");
+    setCurrentImages([]); // Limpiar imágenes después de enviar
   }
 
   useEffect(() => {
@@ -70,9 +69,8 @@ export default function Home() {
   }, []);
 
   function recivedMessage(message: Message<"image" | "text">) {
-    console.log(message);
-
-    setMessages((state) => [...state, message]);
+    console.log("Mensaje recibido: ", message);
+    setMessages((prevMessages) => [...prevMessages, message]);
   }
 
   return (
@@ -100,26 +98,17 @@ export default function Home() {
                 </div>
               ) : (
                 <div>
-                  <span className="bg-purple-700 h-24 w-6">
-                    {message.text?.message}
-                  </span>
+                  <span className="h-24 w-6">{message.text?.message}</span>
                 </div>
               )}
-
-              {/* <span className="ml-auto text-sm">{message.body}</span> */}
             </span>
           </div>
         ))}
       </div>
 
-      {/* Formulario y área de imágenes */}
-      <div className="fixedX w-fullX bottom-0X">
-        {/* Imágenes a enviar */}
+      <div className="fixed w-full bottom-0">
         {isLoadingImages ? (
-          <div className="flex items-center justify-center">
-            {/* <Spinner size="lg" /> */}
-            Cargando...
-          </div>
+          <div className="flex items-center justify-center">Cargando...</div>
         ) : currentImages.length > 0 ? (
           <div className="flex gap-3 overflow-auto m-1.5 h-[125px]">
             {currentImages.map((aImage, index) => (
@@ -135,7 +124,6 @@ export default function Home() {
           </div>
         ) : null}
 
-        {/* Formulario de envío */}
         <form
           className="flex items-center justify-center"
           onSubmit={handleSubmit}
@@ -151,7 +139,6 @@ export default function Home() {
             type="file"
             accept="image/*"
             multiple
-            // className="ml-2"
             onChange={(event) => {
               setIsLoadingImages(true);
 
@@ -186,7 +173,6 @@ export default function Home() {
         <div className="text-4xl text-white italic my-3.5">
           Wilson's Global Chat
         </div>
-        {/* <img className=" w-1/3 rounded-full" src="/MatiMati_crop.jpg" alt="" /> */}
       </div>
     </div>
   );

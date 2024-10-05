@@ -17,11 +17,13 @@ app.use(express.json());
 app.use(cors());
 
 io.on("connection", (socket) => {
-  // console.log(socket.id);
   socket.on("message", (body) => {
+    console.log(body);
+
+    // Emitir el mensaje a todos incluyendo al emisor
     socket.broadcast.emit("message", {
       ...body,
-      from: socket.id.slice(0, 6),
+      from: socket.id.slice(0, 6), // Cambiar el "from" solo para los demás usuarios
     });
   });
 });
