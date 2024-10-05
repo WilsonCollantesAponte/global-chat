@@ -59,7 +59,7 @@ export default function Home() {
 
   return (
     <div className="bg-zinc-700 flex flex-col min-h-screen">
-      <div className="text-white overflow-auto grow bg-red-300">
+      <div className="text-white overflow-auto grow">
         {messages.map((message, index) => (
           <div
             className={`w-2/3 rounded-xl mt-1.5 ${
@@ -76,7 +76,7 @@ export default function Home() {
       </div>
 
       {/* Formulario y área de imágenes */}
-      <div className="fixedX bg-orange-400 w-fullX bottom-0X">
+      <div className="fixedX w-fullX bottom-0X">
         {/* Imágenes a enviar */}
         {isLoadingImages ? (
           <div className="flex items-center justify-center">
