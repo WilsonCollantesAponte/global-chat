@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
   // console.log(socket.id);
   socket.on("message", (body) => {
     socket.broadcast.emit("message", {
-      body,
+      ...body,
       from: socket.id.slice(0, 6),
     });
   });

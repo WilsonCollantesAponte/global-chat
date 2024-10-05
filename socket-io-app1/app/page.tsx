@@ -24,25 +24,41 @@ type Message<T extends "text" | "image"> = {
 
 export default function Home() {
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [isLoadingImages, setIsLoadingImages] = useState<boolean>(false);
   const [currentImages, setCurrentImages] = useState<Array<string>>([]);
+  const [messages, setMessages] = useState<Message<"image" | "text">[]>([]);
+  const [isLoadingImages, setIsLoadingImages] = useState<boolean>(false);
 
   function handleSubmit(event) {
     console.log(currentImages);
 
     event.preventDefault();
 
-    const newMessage = {
-      body: message,
-      from: "Me",
-      type: "text",
-    };
+    if (currentImages.length) {
+      const newMessage: Message<"image"> = {
+        from: "Me",
+        type: "image",
+        image: {
+          uri: currentImages[0],
+          message,
+        },
+      };
+
+      setMessages([...messages, newMessage]);
+      socket.emit("message", newMessage);
+    } else {
+      const newMessage: Message<"text"> = {
+        from: "Me",
+        type: "text",
+        text: {
+          message,
+        },
+      };
+
+      setMessages([...messages, newMessage]);
+      socket.emit("message", newMessage);
+    }
 
     setMessage("");
-
-    setMessages([...messages, newMessage]);
-    socket.emit("message", message);
   }
 
   useEffect(() => {
@@ -53,7 +69,9 @@ export default function Home() {
     };
   }, []);
 
-  function recivedMessage(message) {
+  function recivedMessage(message: Message<"image" | "text">) {
+    console.log(message);
+
     setMessages((state) => [...state, message]);
   }
 
@@ -69,7 +87,26 @@ export default function Home() {
           >
             <span className="py-1 px-2 relative break-all flex flex-col">
               <span className="font-extrabold italic">{message.from}</span>
-              <span className="ml-auto text-sm">{message.body}</span>
+
+              {message.type === "image" ? (
+                <div>
+                  <Image
+                    src={message.image.uri}
+                    width={120}
+                    height={120}
+                    alt="..."
+                  />
+                  <span>{message.image?.message}</span>
+                </div>
+              ) : (
+                <div>
+                  <span className="bg-purple-700 h-24 w-6">
+                    {message.text?.message}
+                  </span>
+                </div>
+              )}
+
+              {/* <span className="ml-auto text-sm">{message.body}</span> */}
             </span>
           </div>
         ))}
