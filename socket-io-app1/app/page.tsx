@@ -5,8 +5,8 @@ import { useEffect, useState, FormEvent, ChangeEvent, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-// const socket = io("http://localhost:3001/");
-const socket = io("https://global-chat-uxv7.onrender.com/");
+const socket = io("http://localhost:3001/");
+// const socket = io("https://global-chat-uxv7.onrender.com/");
 
 type TextMessage = {
   from: string;
@@ -88,23 +88,34 @@ export default function Component() {
     const { files } = event.target;
     if (!files?.length) return setIsLoadingImages(false);
 
+    const newFiles = Array.from(files);
+    const totalImages = currentImages.length + newFiles.length;
+
+    if (totalImages > 5) {
+      alert("Sólo puedes subir un máximo de 5 imágenes.");
+      setIsLoadingImages(false);
+      return;
+    }
+
     const updatedImages: string[] = [];
     let loadedImages = 0;
 
-    for (const file of Array.from(files)) {
+    for (const file of newFiles) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = (event) => {
         if (event.target?.result) {
           updatedImages.push(String(event.target.result));
           loadedImages++;
-          if (loadedImages === files.length) {
+          if (loadedImages === newFiles.length) {
             setCurrentImages(updatedImages);
             setIsLoadingImages(false);
           }
         }
       };
     }
+
+    // event.target.value=''
   }
 
   return (
