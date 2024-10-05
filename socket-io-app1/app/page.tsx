@@ -69,7 +69,7 @@ export default function Home() {
   }, []);
 
   function recivedMessage(message: Message<"image" | "text">) {
-    console.log("Mensaje recibido: ", message);
+    // console.log("Mensaje recibido: ", message);
     setMessages((prevMessages) => [...prevMessages, message]);
   }
 

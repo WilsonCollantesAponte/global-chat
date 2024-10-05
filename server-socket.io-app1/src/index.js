@@ -18,7 +18,7 @@ app.use(cors());
 
 io.on("connection", (socket) => {
   socket.on("message", (body) => {
-    console.log(body);
+    // console.log(body);
 
     // Emitir el mensaje a todos incluyendo al emisor
     socket.broadcast.emit("message", {
