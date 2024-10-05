@@ -20,8 +20,7 @@ io.on("connection", (socket) => {
   socket.on("message", (body) => {
     // console.log(body);
 
-    // Emitir el mensaje a todos incluyendo al emisor
-    socket.broadcast.emit("message", {
+    io.emit("message", {
       ...body,
       from: socket.id.slice(0, 6), // Cambiar el "from" solo para los demás usuarios
     });

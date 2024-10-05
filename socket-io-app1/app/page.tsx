@@ -1,38 +1,41 @@
 "use client";
 import { io } from "socket.io-client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent, ChangeEvent } from "react";
 import Image from "next/image";
 
 const socket = io("http://localhost:3001/");
-// const socket = io("https://global-chat-uxv7.onrender.com/");
 
-type Message<T extends "text" | "image"> = {
+type TextMessage = {
   from: string;
-  type: T;
-} & (T extends "text"
-  ? {
-      text: {
-        message: string;
-      };
-    }
-  : {
-      image: {
-        uri: string;
-        message?: string;
-      };
-    });
+  type: "text";
+  text: {
+    message: string;
+  };
+};
+
+type ImageMessage = {
+  from: string;
+  type: "image";
+  image: {
+    uri: string;
+    message?: string;
+  };
+};
+
+// Usar la unión de tipos para Message
+type Message = TextMessage | ImageMessage;
 
 export default function Home() {
   const [message, setMessage] = useState("");
   const [currentImages, setCurrentImages] = useState<Array<string>>([]);
-  const [messages, setMessages] = useState<Message<"image" | "text">[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [isLoadingImages, setIsLoadingImages] = useState<boolean>(false);
 
-  function handleSubmit(event) {
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (currentImages.length) {
-      const newMessage: Message<"image"> = {
+      const newMessage: ImageMessage = {
         from: "Me",
         type: "image",
         image: {
@@ -44,7 +47,7 @@ export default function Home() {
       setMessages([...messages, newMessage]);
       socket.emit("message", newMessage); // Emitir el mensaje
     } else if (message.trim()) {
-      const newMessage: Message<"text"> = {
+      const newMessage: TextMessage = {
         from: "Me",
         type: "text",
         text: {
@@ -68,9 +71,35 @@ export default function Home() {
     };
   }, []);
 
-  function recivedMessage(message: Message<"image" | "text">) {
+  function recivedMessage(message: Message) {
     // console.log("Mensaje recibido: ", message);
     setMessages((prevMessages) => [...prevMessages, message]);
+  }
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    setIsLoadingImages(true);
+
+    const { files } = event.target;
+
+    if (!files?.length) return setIsLoadingImages(false);
+
+    const updatedImages: string[] = [];
+    let loadedImages = 0;
+
+    for (const file of Array.from(files)) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        if (event.target?.result) {
+          updatedImages.push(String(event.target.result));
+          loadedImages++;
+          if (loadedImages === files.length) {
+            setCurrentImages(updatedImages);
+            setIsLoadingImages(false);
+          }
+        }
+      };
+    }
   }
 
   return (
@@ -98,7 +127,7 @@ export default function Home() {
                 </div>
               ) : (
                 <div>
-                  <span className="h-24 w-6">{message.text?.message}</span>
+                  <span className="h-24 w-6">{message.text.message}</span>
                 </div>
               )}
             </span>
@@ -139,29 +168,7 @@ export default function Home() {
             type="file"
             accept="image/*"
             multiple
-            onChange={(event) => {
-              setIsLoadingImages(true);
-
-              const { files } = event.target;
-
-              if (!files?.length) return setIsLoadingImages(false);
-
-              const updatedImages = [];
-              let loadedImages = 0;
-
-              for (const file of Array.from(files)) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                  updatedImages.push(String(event.target?.result));
-                  loadedImages++;
-                  if (loadedImages === files.length) {
-                    setCurrentImages(updatedImages);
-                    setIsLoadingImages(false);
-                  }
-                };
-              }
-            }}
+            onChange={handleFileChange}
           />
           <button className="text-white px-3 py-2 bg-blue-600 rounded-md ml-2">
             Enviar
